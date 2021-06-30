@@ -1,29 +1,29 @@
 version: "3.8"
 
 services:
-  frontend:
-    depends_on: 
-      - backend
+  web:
     build: ./frontend
     ports:
       - 3000:3000
-
-  backend: 
-    depends_on: 
-      - db
+  api:
     build: ./backend
-    ports: 
+    ports:
       - 3001:3001
-    environment: 
+    environment:
       DB_URL: mongodb://db/vidly
-    command: ./docker-entrypoint.sh
-
+    volumes: 
+      - ./backend:/app
+    # command: chmod u+x wait-for && ./wait-for db:27017 && migrate-mongo up && npm start
+    # too long we can use an entrypont script instead
+    # command: 
+    #   ./docker-entrypoint.sh
+    # entrypoint script is not executed
+    # cannot get this to work
   db:
     image: mongo:4.0-xenial
     ports:
       - 27017:27017
     volumes:
       - vidly:/data/db
-
-volumes:
-  vidly:
+volumes: 
+  vidly: 
